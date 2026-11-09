@@ -1,0 +1,66 @@
+# ==========================================
+# Data & Big Files
+# ==========================================
+*.parquet
+*.csv
+*.feather
+*.h5
+*.pkl
+*.json
+*.png
+*.jpg
+
+# ==========================================
+# PyTorch & Machine Learning Models
+# ==========================================
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.safetensors
+
+# ==========================================
+# Project Specific Folders
+# Ignore contents but keep the directories
+# ==========================================
+data/*
+!data/.gitkeep
+!data/01_raw/
+data/01_raw/*
+!data/01_raw/.gitkeep
+!data/01_raw/Expected_speed_limit_file.txt
+
+results/*
+!results/.gitkeep
+
+# Pipeline outputs (scores, checkpoints, logs, prior weights)
+outputs/
+models/
+*.log
+
+# ==========================================
+# Python Caches & Build Files
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+
+# ==========================================
+# Virtual Environments & Configs
+# ==========================================
+.env
+.venv/
+venv/
+env/
+
+# ==========================================
+# Jupyter Notebooks & IDE Specific
+# ==========================================
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+.aider*
