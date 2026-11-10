@@ -29,6 +29,12 @@ data/*
 data/01_raw/*
 !data/01_raw/.gitkeep
 
+# Released synthetic Porto benchmark (override the *.parquet rule above)
+!data/06_model_ready/
+data/06_model_ready/*
+!data/06_model_ready/porto/
+!data/06_model_ready/porto/*.parquet
+
 results/*
 !results/.gitkeep
 

@@ -47,6 +47,7 @@ results/           # metric tables (CSV) and figures
 ```
 
 Only `data/01_raw/` needs to be filled by hand; every other folder is created by the scripts.
+The synthetic Porto benchmark is included in `data/06_model_ready/porto/` (see below).
 
 ## Setup
 
@@ -76,7 +77,30 @@ and finally `pip install -r requirements.txt` for the remaining packages.
   (`01_extract.py`) is included for transparency; it reads database credentials
   (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`) from a `.env` file.
 
-## Reproducing the Porto results
+## Synthetic Porto benchmark
+
+The benchmark used in the paper is included, so the detection experiments can be run without
+the data-preparation, prior, and generation stages:
+
+| File | Contents |
+|---|---|
+| `data/06_model_ready/porto/model_ready_map_df_porto.parquet` | Road graph (24,275 directed edges): length, speed limit, road category, tortuosity, geometry, free-flow log-time, posterior shift |
+| `data/06_model_ready/porto/model_ready_trajectories_porto.parquet` | 50,000 trajectories (2.42M edge traversals): edge sequence, timestamps, durations, edge-level spatial/temporal labels, anomaly class and subtype, train/val/test split |
+
+Trips are split 30k/10k/10k (train/val/test), and the class split is 90% normal, 4% spatial,
+4% temporal, and 2% compound (Table II). Labels are given per edge (`spatial_anomaly`,
+`temporal_anomaly`) and per trip (`anomaly_class`, `spatial_subtype`).
+
+```bash
+# Detection on the included benchmark (Tables V-VII, Porto), seeds 42-44
+python src/05_TAD/run_multiseed.py --tag porto
+```
+
+The benchmark is derived from the Porto taxi data (CC BY 4.0) and OpenStreetMap
+(© OpenStreetMap contributors) and is released under the
+[Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/).
+
+## Reproducing the Porto results from scratch
 
 ```bash
 # Stage 0: data preparation
@@ -149,4 +173,4 @@ If you use this code or the benchmark engine, please cite:
 
 ## License
 
-Code: MIT (see `LICENSE`). Porto data: CC BY 4.0. OpenStreetMap data: ODbL.
+Code: MIT (see `LICENSE`). Synthetic Porto benchmark: ODbL. Porto taxi data: CC BY 4.0. OpenStreetMap data: ODbL.
