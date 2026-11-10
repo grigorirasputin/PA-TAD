@@ -109,28 +109,36 @@ def main():
     print(table.to_string())
     print("\nSeeds per cell:\n" + summ.pivot(index="variant", columns="region", values="seeds").reindex(list(VARIANTS)).to_string())
 
+    plot_ap = summ[summ["region"] == args.plot_region].set_index("variant").reindex(list(VARIANTS))
+    if not plot_ap.empty:
+        print(f"\n=== AP for Fig. 6 ({args.plot_region}; mean over seeds, %) ===")
+        print(plot_ap[["s_ap", "t_ap"]].rename(index=lambda v: LEGEND[v]).to_string())
+
     if curves:
-        fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.9), sharey=True)
+        # Sized for one IEEE column (3.5 in) so fonts print at 5-7 pt without scaling
+        plt.rcParams.update({"font.size": 6, "axes.linewidth": 0.5})
+        fig, axes = plt.subplots(1, 2, figsize=(3.5, 1.95), sharey=True)
         for v in VARIANTS:
             if v not in curves:
                 continue
             runs = curves[v]
             color, ls, lw = STYLE[v]
-            for k, (ax, yi, si) in enumerate([(axes[0], 0, 1), (axes[1], 2, 3)]):
+            for ax, yi, si in [(axes[0], 0, 1), (axes[1], 2, 3)]:
                 y_all = np.concatenate([r[yi] for r in runs]); s_all = np.concatenate([r[si] for r in runs])
                 p, r_, _ = precision_recall_curve(y_all, s_all)
                 ap_mean = np.mean([average_precision_score(r[yi], r[si]) for r in runs]) * 100
-                ax.plot(r_, p, color=color, linestyle=ls, linewidth=lw, label=f"{LEGEND[v]} ({ap_mean:.1f}%)")
+                ax.plot(r_, p, color=color, linestyle=ls, linewidth=lw * 0.6, label=f"{LEGEND[v]} ({ap_mean:.1f}%)")
         for ax, title in zip(axes, ["Spatial PR", "Temporal PR"]):
-            ax.set_title(f"{args.plot_region.capitalize()} — {title}", fontsize=9, fontweight="bold")
-            ax.set_xlabel("Recall", fontsize=8); ax.set_xlim(0, 1); ax.set_ylim(0, 1.02)
-            ax.tick_params(labelsize=7); ax.grid(True, linestyle="--", alpha=0.3)
-            ax.legend(loc="lower left", fontsize=5.5, frameon=True)
-        axes[0].set_ylabel("Precision", fontsize=8)
-        fig.tight_layout()
+            ax.set_title(f"{args.plot_region.capitalize()} \u2014 {title}", fontsize=6.5, fontweight="bold", pad=2)
+            ax.set_xlabel("Recall", fontsize=6, labelpad=1); ax.set_xlim(0, 1); ax.set_ylim(0, 1.02)
+            ax.tick_params(labelsize=5.5, width=0.5, length=2, pad=1); ax.grid(True, linestyle="--", alpha=0.3, linewidth=0.4)
+            ax.legend(loc="lower left", fontsize=4.6, frameon=True, handlelength=2.2, borderpad=0.3,
+                      labelspacing=0.2, framealpha=0.85)
+        axes[0].set_ylabel("Precision", fontsize=6, labelpad=1)
+        fig.tight_layout(pad=0.3, w_pad=0.6)
         stem = args.out_dir / "figures" / f"ablation_pr_curves_{args.plot_region}_pure"
         stem.parent.mkdir(parents=True, exist_ok=True)
-        fig.savefig(stem.with_suffix(".png"), dpi=300, bbox_inches="tight")
+        fig.savefig(stem.with_suffix(".png"), dpi=600, bbox_inches="tight")
         fig.savefig(stem.with_suffix(".pdf"), bbox_inches="tight")
         print(f"\nSaved figure to {stem}.png / .pdf")
     print(f"Saved {args.out_dir / 'ablation_pure_summary.csv'} and ablation_pure_runs.csv")
