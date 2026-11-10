@@ -13,10 +13,9 @@ tqdm==4.67.1
 xgboost==3.3.0
 psycopg2-binary==2.9.12
 pyarrow==25.0.1
-polars
-scipy
-python-dotenv
-requests
-osmnx
-orjson
-ujson
+polars==1.44.1
+scipy==1.18.1
+python-dotenv==1.2.3
+requests==2.34.2
+osmnx==2.1.1
+# Optional: ujson or orjson speeds up JSON parsing in Porto_01_extraction.py
