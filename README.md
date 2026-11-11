@@ -163,7 +163,7 @@ If you use this code or the benchmark engine, please cite:
 ```bibtex
 @misc{rumi2026patad,
   title  = {Prior-Anchored Trajectory Anomaly Detection},
-  author = {Rumi, {\'A}d{\'a}m and Skovrup, Peter Lidegaard and Thomsen, L{\ae}rke Ansgaard
+  author = {Rumi, Ad{\'a}m and Skovrup, Peter Lidegaard and Thomsen, L{\ae}rke Ansgaard
             and Yang, Sean Bin and Torp, Kristian},
   year   = {2026},
   note   = {Under review},
